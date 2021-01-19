@@ -74,6 +74,8 @@ class TodoController extends Controller
     public function edit($id)
     {
         //
+        $todo = Todo::find($id);
+        return view('todo.edit', compact('todo'));
     }
 
     /**
@@ -86,6 +88,21 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request,[
+            'title'=>'required',
+            'content'=>'required',
+            'begin'=>'required',
+            'end'=>'required',
+        ]);
+        $todo = Todo::find($id);
+
+        $todo->title = $request->get('title');
+        $todo->content = $request->get('content');
+        $todo->begin = $request->get('begin');
+        $todo->end = $request->get('end');
+
+        $todo->save();
+        return redirect()->route('todo.index')->with('message', 'TODOを編集しました。');
     }
 
     /**
